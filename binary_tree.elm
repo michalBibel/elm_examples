@@ -89,6 +89,7 @@ isElement s tree =
         isElement s left
       else
         True
+        
 fold : (a -> b -> b) -> b -> Tree a -> b
 fold f a tree =
   case tree of
@@ -96,6 +97,18 @@ fold f a tree =
     Node v left right -> 
       fold f (fold f (f v a) left) right
 
+sumfold : Tree number -> number
+sumfold tree = fold (+) 0 tree
+
+flattenFold : Tree a -> List a
+flattenFold tree = fold (::) [] tree
+
+isElementFold : comparable -> Tree comparable -> Bool
+isElementFold s tree = 
+  let
+    eq el prev = prev || el == s
+  in
+    fold eq False tree
 
 t1 = fromList [1,2,3]
 t2 = fromList [2,1,3]
@@ -110,6 +123,10 @@ main =
         , display "flatten" flatten t2
         , display "isElement" (isElement 4) t2
         , display "isElement" (isElement 3) t2
+        , display "sumfold" sumfold t1
+        , display "flattenFold" flattenFold t2
+        , display "isElementFold" (isElementFold 3) t2
+        , display "isElementFold" (isElementFold 4) t2
         ]
 
 
